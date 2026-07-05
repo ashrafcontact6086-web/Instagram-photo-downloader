@@ -232,6 +232,44 @@
     .bm,.plat,.feat{transition:none}
   }
 
+  /* Download by URL */
+  .dl-box{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px 26px;
+  }
+  .dl-row{display:flex;gap:10px;flex-wrap:wrap}
+  .dl-row input[type=url]{
+    flex:1;min-width:220px;background:#04060c;color:#dbe8ff;border:1px solid var(--line);
+    border-radius:12px;padding:13px 16px;font-size:14px;font-family:ui-monospace,Menlo,Consolas,monospace;
+    outline:none;transition:border-color .2s;
+  }
+  .dl-row input[type=url]:focus{border-color:rgba(139,92,246,.6)}
+  .dl-row select{
+    background:#0d1220;color:var(--txt);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;outline:none;
+  }
+  .dl-row button{
+    background:var(--grad);border:0;color:#fff;padding:12px 30px;border-radius:12px;
+    font-weight:800;font-size:15px;cursor:pointer;font-family:inherit;transition:transform .2s,filter .2s,opacity .2s;
+  }
+  .dl-row button:hover{transform:translateY(-1px);filter:brightness(1.1)}
+  .dl-row button:disabled{opacity:.55;cursor:wait;transform:none}
+  #dlStatus{margin-top:14px;font-size:14px;color:var(--mut);min-height:22px}
+  #dlStatus.err{color:#fca5a5}
+  #dlStatus.ok{color:#86efac}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#8b5cf6;border-radius:50%;vertical-align:-2px;margin-inline-end:7px;animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .dl-res{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px;
+    background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:14px;padding:14px 18px;
+  }
+  .dl-res .fn{flex:1;min-width:200px;font-size:13.5px;color:#d1fae5;word-break:break-all;direction:ltr;text-align:left}
+  .dl-res a.get{
+    background:#16a34a;color:#fff;text-decoration:none;font-weight:800;font-size:14px;
+    padding:10px 24px;border-radius:10px;transition:filter .2s;
+  }
+  .dl-res a.get:hover{filter:brightness(1.12)}
+
   /* Toast */
   #toast{
     position:fixed;bottom:26px;inset-inline-start:50%;transform:translateX(50%) translateY(80px);
@@ -250,6 +288,7 @@
       <span>سوشيال <b>سيفر</b></span>
     </a>
     <div class="nav-links">
+      <a href="#byurl">يوتيوب</a>
       <a href="#platforms">المنصات</a>
       <a href="#install">التثبيت</a>
       <a href="#how">الاستخدام</a>
@@ -262,12 +301,12 @@
   <div>
     <span class="eyebrow">✦ أداة واحدة لكل منصات التواصل</span>
     <h1>حمّل أي صورة أو فيديو <span class="grad">بالجودة الأصلية</span> من كل المنصات</h1>
-    <p class="lead">إنستغرام، تيك توك، إكس (تويتر)، فيسبوك، ثريدز، بنترست — وأي موقع آخر. كل شيء يعمل داخل متصفحك مباشرة: بدون سيرفرات، بدون إعلانات، وبدون أن تغادر بياناتك جهازك.</p>
+    <p class="lead">يوتيوب، إنستغرام، تيك توك، إكس (تويتر)، فيسبوك، ثريدز، بنترست — وأي موقع آخر. بدون إعلانات، بدون حدود، وخصوصيتك محفوظة.</p>
     <a id="bm" class="bm" href="#" title="اسحبني إلى شريط المفضلة">📥 سوشيال سيفر</a>
-    <p class="drag-hint">اسحب الزر أعلاه وأفلته في <b>شريط المفضلة</b> — لا تضغط عليه هنا. لإظهار الشريط: <code style="direction:ltr;display:inline-block">Ctrl/⌘ + Shift + B</code></p>
+    <p class="drag-hint">اسحب الزر أعلاه وأفلته في <b>شريط المفضلة</b> — لا تضغط عليه هنا. لإظهار الشريط: <code style="direction:ltr;display:inline-block">Ctrl/⌘ + Shift + B</code><br>أو <a href="#byurl" style="color:#8fd0ff;font-weight:700">الصق رابطاً مباشرة (يوتيوب والجوال) ←</a></p>
     <div class="stats">
       <span class="stat"><span>✓</span> جودة أصلية 100%</span>
-      <span class="stat"><span>✓</span> 6+ منصات</span>
+      <span class="stat"><span>✓</span> 7+ منصات + يوتيوب</span>
       <span class="stat"><span>✓</span> تحميل ZIP دفعة واحدة</span>
       <span class="stat"><span>✓</span> مجاني ومفتوح المصدر</span>
     </div>
@@ -295,6 +334,31 @@
   </div>
 </header>
 
+<section id="byurl" class="container">
+  <div class="sec-head reveal">
+    <span class="sec-eyebrow">يوتيوب + التحميل بالرابط</span>
+    <h2 class="sec-title">الصق الرابط… ونحن نتكفّل بالباقي</h2>
+    <p class="sec-sub">الطريقة الوحيدة الموثوقة ليوتيوب (فيديو، شورتس، موسيقى) — وتعمل أيضاً مع بقية المنصات، ومثالية للجوال.</p>
+  </div>
+  <div class="dl-box reveal">
+    <div class="dl-row">
+      <input id="dlUrl" type="url" dir="ltr" placeholder="https://youtube.com/watch?v=…" aria-label="رابط الفيديو">
+      <select id="dlQ" aria-label="الجودة">
+        <option value="max">أعلى جودة متاحة</option>
+        <option value="1080" selected>1080p</option>
+        <option value="720">720p</option>
+        <option value="480">480p</option>
+        <option value="360">360p</option>
+        <option value="audio">🎵 صوت فقط MP3</option>
+      </select>
+      <button id="dlGo">⬇ تحميل</button>
+    </div>
+    <div id="dlStatus" role="status"></div>
+    <div id="dlResult"></div>
+    <p class="drag-hint" style="margin-top:14px">🔎 شفافية كاملة: هذه الميزة وحدها تمرّر الرابط عبر خوادم <b>Cobalt</b> المجتمعية مفتوحة المصدر، لأن يوتيوب يمنع التحميل المباشر من المتصفح. بقية المنصات تعمل محلياً 100% عبر زر المفضلة.</p>
+  </div>
+</section>
+
 <section id="platforms" class="container">
   <div class="sec-head reveal">
     <span class="sec-eyebrow">المنصات المدعومة</span>
@@ -302,6 +366,7 @@
     <p class="sec-sub">محرّك استخراج مخصّص لكل منصة يقرأ روابط الوسائط الأصلية من بيانات الصفحة نفسها — وليس لقطات شاشة أو نسخاً مضغوطة.</p>
   </div>
   <div class="plat-grid reveal">
+    <div class="plat"><img src="https://cdn.simpleicons.org/youtube/FF0000" alt="YouTube" loading="lazy" width="34" height="34"><h3>يوتيوب</h3><span class="badge alt">عبر لصق الرابط</span></div>
     <div class="plat"><img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram" loading="lazy" width="34" height="34"><h3>إنستغرام</h3><span class="badge">صور + فيديو + ريلز</span></div>
     <div class="plat"><img src="https://cdn.simpleicons.org/tiktok/ffffff" alt="TikTok" loading="lazy" width="34" height="34"><h3>تيك توك</h3><span class="badge">فيديو + صور</span></div>
     <div class="plat"><img src="https://cdn.simpleicons.org/x/ffffff" alt="X" loading="lazy" width="34" height="34"><h3>إكس (تويتر)</h3><span class="badge">صور + فيديو</span></div>
@@ -390,12 +455,12 @@
       <p>شغّل الفيديو لثوانٍ قليلة ثم اضغط الأداة مرة أخرى. بعض المنصات لا تكشف رابط الفيديو إلا بعد بدء تشغيله، والأداة تلتقطه فور توفره.</p>
     </details>
     <details>
-      <summary>لماذا يوتيوب غير مدعوم؟</summary>
-      <p>يوتيوب يشفّر روابط الفيديو ويفصل الصوت عن الصورة في بثّين منفصلين، لذا لا يمكن لأي أداة متصفح تحميله بجودة عالية مع الصوت بشكل موثوق. نفضّل الصراحة على وعود زائفة — لتحميل يوتيوب استخدم أدوات سطح مكتب متخصصة.</p>
+      <summary>كيف يعمل تحميل يوتيوب؟</summary>
+      <p>يوتيوب يشفّر روابط الفيديو ويفصل الصوت عن الصورة، فلا يمكن تحميله من داخل المتصفح وحده. لذلك يمرّ طلب يوتيوب عبر خوادم <b>Cobalt</b> المجتمعية مفتوحة المصدر التي تدمج الصوت والصورة وتعيد لك ملفاً واحداً بالجودة التي تختارها (حتى أعلى جودة متاحة أو MP3). إن ضغطت زر المفضلة وأنت على يوتيوب، سننقلك تلقائياً لقسم التحميل بالرابط. ملاحظة: هذه الخوادم مجانية ومزدحمة أحياناً — إن تعثّر خادم نجرّب غيره تلقائياً.</p>
     </details>
     <details>
       <summary>هل تعمل على الجوال؟</summary>
-      <p>الأداة مصممة أساساً لمتصفحات سطح المكتب (كروم، إيدج، فايرفوكس، سفاري). على الجوال يمكن استخدامها في كروم وسفاري عبر حفظها كإشارة مرجعية ثم كتابة اسمها في شريط العنوان أثناء تصفح المنشور.</p>
+      <p>نعم بطريقتين: الأسهل على الجوال هي قسم <b>«التحميل بالرابط»</b> — انسخ رابط المنشور والصقه هناك. وزر المفضلة يعمل أيضاً في كروم وسفاري عبر حفظه كإشارة مرجعية ثم كتابة اسمه في شريط العنوان أثناء تصفح المنشور.</p>
     </details>
     <details>
       <summary>هل استخدام الأداة قانوني؟</summary>
@@ -423,7 +488,7 @@ async function __smdl(){
   const ID='__smHQDL';const old=document.getElementById(ID);if(old)old.remove();
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const host=location.hostname.replace(/^www\./,'').replace(/^m\./,'');
-  if(/(^|\.)youtube\.com$/.test(host)||host==='youtu.be'){alert('يوتيوب غير مدعوم: يشفّر روابط الفيديو ويفصل الصوت عن الصورة، فلا يمكن تحميله من المتصفح بجودة عالية. استخدم أداة سطح مكتب متخصصة.');return;}
+  if(/(^|\.)youtube\.com$/.test(host)||host==='youtu.be'){window.open('https://ashrafcontact6086-web.github.io/Instagram-photo-downloader/?url='+encodeURIComponent(location.href)+'#byurl','_blank');return;}
   const items=[];const seen=new Set();
   const push=(type,url,w,h,poster)=>{if(!url||typeof url!=='string')return;if(url.slice(0,5)==='blob:'||url.slice(0,5)==='data:')return;if(seen.has(url))return;seen.add(url);items.push({type:type,url:url,w:+w||0,h:+h||0,poster:poster||''});};
   const deep=(o,pred,out,d)=>{if(!o||typeof o!=='object'||d>28)return;try{if(pred(o))out.push(o);}catch(e){}for(const k in o){const v=o[k];if(v&&typeof v==='object')deep(v,pred,out,d+1);}};
@@ -664,6 +729,127 @@ async function __smdl(){
   }else{
     document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});
   }
+
+  /* ============================================
+     التحميل بالرابط (يوتيوب وأكثر) عبر خوادم Cobalt
+     ============================================ */
+  var COBALT_FALLBACK=[
+    'https://api.cobalt.blackcat.sweeux.org',
+    'https://api.cobalt.liubquanti.click',
+    'https://rue-cobalt.xenon.zone'
+  ];
+  var $u=document.getElementById('dlUrl'),$q=document.getElementById('dlQ'),
+      $go=document.getElementById('dlGo'),$st=document.getElementById('dlStatus'),
+      $res=document.getElementById('dlResult');
+
+  function status(html,cls){$st.className=cls||'';$st.innerHTML=html;}
+
+  /* قائمة الخوادم: من دليل cobalt.directory (مع تخزين 6 ساعات)، وإلا القائمة الاحتياطية */
+  async function cobaltInstances(){
+    try{
+      var cached=JSON.parse(localStorage.getItem('cb_inst')||'null');
+      if(cached&&Date.now()-cached.t<21600000&&cached.list&&cached.list.length)return cached.list;
+    }catch(e){}
+    try{
+      var ctl=new AbortController();var tm=setTimeout(function(){ctl.abort();},8000);
+      var r=await fetch('https://cobalt.directory/api/tests',{signal:ctl.signal});
+      clearTimeout(tm);
+      var j=await r.json();
+      var list=(j.data||[])
+        .filter(function(i){return i.online&&!i.turnstile&&i.tests&&i.tests.youtube&&i.tests.youtube.status;})
+        .sort(function(a,b){return (b.score||0)-(a.score||0);})
+        .map(function(i){return (i.protocol||'https')+'://'+i.api;})
+        .slice(0,6);
+      if(list.length){
+        try{localStorage.setItem('cb_inst',JSON.stringify({t:Date.now(),list:list}));}catch(e){}
+        return list;
+      }
+    }catch(e){}
+    return COBALT_FALLBACK;
+  }
+
+  function errMsg(code){
+    code=String(code||'');
+    if(code.indexOf('link.invalid')>-1||code.indexOf('link.unsupported')>-1)return 'الرابط غير صالح أو المنصة غير مدعومة. تأكد من نسخ رابط المنشور أو الفيديو كاملاً.';
+    if(code.indexOf('content')>-1)return 'المحتوى غير متاح — قد يكون خاصاً أو محذوفاً أو مقيّداً بالعمر.';
+    if(code.indexOf('rate')>-1)return 'الخادم مزدحم حالياً.';
+    return 'تعذّر التحميل من هذا الخادم.';
+  }
+  /* أخطاء المحتوى نفسها ستتكرر على كل الخوادم فلا داعي للمحاولة مجدداً */
+  function isFinalError(code){code=String(code||'');return code.indexOf('link.')>-1||code.indexOf('content')>-1;}
+
+  async function cobaltAsk(api,url,q){
+    var body={url:url};
+    if(q==='audio'){body.downloadMode='audio';body.audioFormat='mp3';}
+    else{body.videoQuality=q;body.youtubeVideoCodec='h264';body.filenameStyle='pretty';}
+    var ctl=new AbortController();var tm=setTimeout(function(){ctl.abort();},35000);
+    try{
+      var r=await fetch(api+'/',{method:'POST',signal:ctl.signal,
+        headers:{'Accept':'application/json','Content-Type':'application/json'},
+        body:JSON.stringify(body)});
+      return await r.json();
+    }finally{clearTimeout(tm);}
+  }
+
+  function showResult(url,filename){
+    $res.innerHTML='';
+    var box=document.createElement('div');box.className='dl-res';
+    var fn=document.createElement('span');fn.className='fn';fn.textContent=filename||'ملف الوسائط جاهز';
+    var a=document.createElement('a');a.className='get';a.href=url;a.textContent='⬇ احفظ الملف';
+    a.setAttribute('download',filename||'');a.rel='noopener';
+    box.appendChild(fn);box.appendChild(a);$res.appendChild(box);
+    status('✓ جاهز! اضغط «احفظ الملف». الرابط صالح لدقائق محدودة.','ok');
+    a.click();
+  }
+
+  function showPicker(list){
+    $res.innerHTML='';
+    list.forEach(function(p,i){
+      var box=document.createElement('div');box.className='dl-res';
+      var fn=document.createElement('span');fn.className='fn';
+      fn.textContent=(p.type==='photo'?'صورة ':p.type==='video'?'فيديو ':'عنصر ')+'#'+(i+1);
+      var a=document.createElement('a');a.className='get';a.href=p.url;a.target='_blank';a.rel='noopener';a.textContent='⬇ تحميل';
+      box.appendChild(fn);box.appendChild(a);$res.appendChild(box);
+    });
+    status('✓ وجدت '+list.length+' عنصراً — حمّل ما تريد.','ok');
+  }
+
+  async function runDl(){
+    var url=($u.value||'').trim();
+    if(!url){status('الصق رابطاً أولاً.','err');$u.focus();return;}
+    if(!/^https?:\/\//i.test(url))url='https://'+url;
+    $go.disabled=true;$res.innerHTML='';
+    status('<span class="spin"></span>جارٍ تجهيز قائمة الخوادم…');
+    try{
+      var apis=await cobaltInstances();
+      for(var i=0;i<apis.length;i++){
+        status('<span class="spin"></span>جارٍ المعالجة عبر الخادم '+(i+1)+' من '+apis.length+'… (يوتيوب قد يستغرق ثوانٍ لدمج الصوت والصورة)');
+        try{
+          var j=await cobaltAsk(apis[i],url,$q.value);
+          if(j&&(j.status==='tunnel'||j.status==='redirect')){showResult(j.url,j.filename);return;}
+          if(j&&j.status==='picker'&&j.picker&&j.picker.length){showPicker(j.picker);return;}
+          if(j&&j.status==='error'){
+            var code=j.error&&j.error.code;
+            if(isFinalError(code)){status('⚠ '+errMsg(code),'err');return;}
+          }
+        }catch(e){}
+      }
+      status('⚠ كل الخوادم المجانية مشغولة الآن — أعد المحاولة بعد دقائق قليلة، أو جرّب جودة أقل.','err');
+    }finally{$go.disabled=false;}
+  }
+
+  $go.addEventListener('click',runDl);
+  $u.addEventListener('keydown',function(e){if(e.key==='Enter')runDl();});
+
+  /* استقبال الرابط من زر المفضلة: ‎?url=… */
+  try{
+    var incoming=new URLSearchParams(location.search).get('url');
+    if(incoming){
+      $u.value=incoming;
+      document.getElementById('byurl').scrollIntoView();
+      runDl();
+    }
+  }catch(e){}
 })();
 </script>
 </body>
