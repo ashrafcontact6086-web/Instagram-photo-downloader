@@ -3,154 +3,668 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>أداة تحميل وسائط إنستغرام — صور وفيديو بجودة عالية</title>
+<title>سوشيال سيفر — حمّل الصور والفيديو من كل المنصات بالجودة الأصلية</title>
+<meta name="description" content="أداة مجانية تعمل داخل متصفحك لتحميل الصور والفيديوهات بجودتها الأصلية من إنستغرام، تيك توك، إكس (تويتر)، فيسبوك، ثريدز، بنترست وأكثر — بدون سيرفرات وبدون إعلانات.">
+<meta property="og:title" content="سوشيال سيفر — تحميل وسائط كل المنصات بالجودة الأصلية">
+<meta property="og:description" content="صور وفيديوهات إنستغرام وتيك توك وإكس وفيسبوك وثريدز وبنترست — بجودتها الأصلية، مباشرة من متصفحك.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f43f5e'/%3E%3Cstop offset='.5' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%2306b6d4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M32 14v24m0 0l-10-10m10 10l10-10M18 46h28' stroke='white' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0d0f14;--card:#161a22;--line:#262c38;--accent:#0095f6;--green:#1e874b;--txt:#eef1f6;--mut:#9aa4b2}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans Arabic",sans-serif;line-height:1.7}
-  .wrap{max-width:820px;margin:0 auto;padding:32px 20px 80px}
-  h1{font-size:26px;margin:0 0 6px}
-  .sub{color:var(--mut);margin:0 0 28px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 22px;margin:18px 0}
-  h2{font-size:18px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
-  .step{margin:0;padding:0;counter-reset:s;list-style:none}
-  .step li{position:relative;padding:6px 40px 6px 0;margin:6px 0}
-  .step li:before{counter-increment:s;content:counter(s);position:absolute;inset-inline-start:0;top:4px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-  .bm{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0095f6,#7b2ff7);color:#fff;text-decoration:none;font-weight:800;font-size:16px;padding:14px 26px;border-radius:12px;box-shadow:0 8px 24px rgba(0,149,246,.35);cursor:grab}
+  :root{
+    --bg:#070a12;
+    --card:rgba(255,255,255,.035);
+    --card-solid:#10141f;
+    --line:rgba(255,255,255,.09);
+    --txt:#eef2f8;
+    --mut:#98a3b5;
+    --pink:#f43f5e;
+    --violet:#8b5cf6;
+    --cyan:#06b6d4;
+    --grad:linear-gradient(120deg,#f43f5e,#8b5cf6 55%,#06b6d4);
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--txt);
+    font-family:"Cairo",-apple-system,"Segoe UI","Noto Sans Arabic",sans-serif;
+    line-height:1.8;overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(720px 420px at 85% -5%,rgba(139,92,246,.16),transparent 65%),
+      radial-gradient(640px 400px at 8% 12%,rgba(244,63,94,.10),transparent 65%),
+      radial-gradient(800px 520px at 50% 115%,rgba(6,182,212,.10),transparent 65%);
+  }
+  .container{max-width:1080px;margin:0 auto;padding:0 22px}
+  a{color:inherit}
+  ::selection{background:rgba(139,92,246,.45)}
+
+  /* ===== Nav ===== */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    background:rgba(7,10,18,.72);border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex;align-items:center;gap:26px;padding:14px 0}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:19px;text-decoration:none}
+  .logo-badge{
+    width:34px;height:34px;border-radius:10px;background:var(--grad);
+    display:grid;place-items:center;font-size:17px;color:#fff;
+    box-shadow:0 4px 18px rgba(139,92,246,.45);
+  }
+  .logo b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:22px;margin-inline-start:auto;font-size:14.5px;font-weight:600}
+  .nav-links a{color:var(--mut);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--txt)}
+  @media(max-width:640px){.nav-links{display:none}}
+
+  /* ===== Hero ===== */
+  .hero{padding:72px 0 46px;display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center}
+  @media(max-width:860px){.hero{grid-template-columns:1fr;padding-top:48px;text-align:center}}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
+    color:#c4b5fd;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.35);
+    padding:5px 14px;border-radius:30px;margin-bottom:18px;
+  }
+  h1{font-size:clamp(30px,4.6vw,50px);font-weight:900;line-height:1.35;margin-bottom:16px}
+  h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{color:var(--mut);font-size:17px;max-width:520px;margin-bottom:28px}
+  @media(max-width:860px){.hero p.lead{margin-inline:auto}}
+  .bm{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--grad);color:#fff;text-decoration:none;
+    font-weight:800;font-size:17px;padding:16px 30px;border-radius:14px;
+    box-shadow:0 10px 34px rgba(139,92,246,.42);cursor:grab;
+    transition:transform .2s,box-shadow .2s;position:relative;
+  }
+  .bm:hover{transform:translateY(-2px);box-shadow:0 14px 42px rgba(139,92,246,.55)}
   .bm:active{cursor:grabbing}
-  .hint{color:var(--mut);font-size:13px;margin-top:10px}
-  textarea{width:100%;height:110px;background:#0a0c11;color:#8fd0ff;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;direction:ltr;white-space:pre;overflow:auto}
-  button.copy{background:var(--accent);border:0;color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;margin-top:10px}
-  button.copy:hover{filter:brightness(1.08)}
-  code{background:#0a0c11;border:1px solid var(--line);border-radius:6px;padding:2px 6px;direction:ltr;display:inline-block;font-size:12px}
-  ul.notes{margin:0;padding-inline-start:22px}
-  ul.notes li{margin:8px 0;color:#d7dde6}
-  details{margin-top:10px}
-  summary{cursor:pointer;color:var(--mut)}
-  pre{background:#0a0c11;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;direction:ltr;font-size:11px;max-height:340px}
-  .pill{display:inline-block;background:#22303f;color:#8fd0ff;border-radius:20px;padding:2px 10px;font-size:12px;margin-inline-start:6px}
-  .tag{display:inline-block;background:#3a1030;color:#ff8fce;border-radius:20px;padding:2px 10px;font-size:12px;margin-inline-start:6px}
-  .warn{color:#ffcf6b}
+  .drag-hint{color:var(--mut);font-size:13.5px;margin-top:14px}
+  .drag-hint b{color:#dbe3ef}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+  @media(max-width:860px){.stats{justify-content:center}}
+  .stat{
+    font-size:12.5px;font-weight:700;color:#cdd6e4;
+    background:var(--card);border:1px solid var(--line);
+    padding:6px 14px;border-radius:30px;
+  }
+  .stat span{color:#67e8f9}
+
+  /* Hero mock panel */
+  .mock{
+    background:var(--card-solid);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);
+    transform:rotate(-1.5deg);
+  }
+  @media(max-width:860px){.mock{max-width:420px;margin:0 auto;transform:none}}
+  .mock-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .mock-title{font-size:12px;color:var(--mut);margin-inline-start:8px;font-weight:600}
+  .mock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px}
+  .thumb{
+    aspect-ratio:1;border-radius:10px;position:relative;
+    display:grid;place-items:center;font-size:22px;color:rgba(255,255,255,.9);
+  }
+  .thumb small{position:absolute;bottom:6px;inset-inline-end:7px;font-size:9.5px;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:5px;font-weight:700}
+  .thumb .chk{position:absolute;top:6px;inset-inline-start:7px;width:15px;height:15px;border-radius:5px;background:rgba(255,255,255,.92);color:#7c3aed;font-size:10px;display:grid;place-items:center;font-weight:900}
+  .mock-actions{display:flex;gap:8px;padding:0 16px 16px}
+  .mock-btn{flex:1;text-align:center;font-size:12px;font-weight:800;padding:9px;border-radius:9px;color:#fff}
+
+  /* ===== Sections ===== */
+  section{padding:56px 0}
+  .sec-head{text-align:center;margin-bottom:38px}
+  .sec-eyebrow{
+    display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.5px;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:8px;
+  }
+  h2.sec-title{font-size:clamp(24px,3.2vw,34px);font-weight:900}
+  .sec-sub{color:var(--mut);max-width:640px;margin:10px auto 0;font-size:15.5px}
+
+  /* Platforms */
+  .plat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:14px}
+  .plat{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:22px 14px;text-align:center;transition:transform .25s,border-color .25s,background .25s;
+  }
+  .plat:hover{transform:translateY(-5px);border-color:rgba(139,92,246,.5);background:rgba(255,255,255,.055)}
+  .plat img{width:34px;height:34px;object-fit:contain}
+  .plat .p-emoji{font-size:32px;line-height:34px}
+  .plat h3{font-size:15px;font-weight:800;margin:10px 0 4px}
+  .plat .badge{
+    display:inline-block;font-size:11px;font-weight:700;color:#86efac;
+    background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);
+    padding:2px 10px;border-radius:20px;
+  }
+  .plat .badge.alt{color:#93c5fd;background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3)}
+
+  /* Steps */
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.steps-grid{grid-template-columns:1fr}}
+  .step-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px 24px;position:relative;overflow:hidden;
+  }
+  .step-num{
+    position:absolute;top:-18px;inset-inline-end:6px;font-size:92px;font-weight:900;
+    color:rgba(255,255,255,.045);line-height:1;
+  }
+  .step-ico{
+    width:46px;height:46px;border-radius:13px;background:var(--grad);
+    display:grid;place-items:center;font-size:21px;margin-bottom:16px;
+    box-shadow:0 6px 20px rgba(139,92,246,.35);
+  }
+  .step-card h3{font-size:17.5px;font-weight:800;margin-bottom:8px}
+  .step-card p{color:var(--mut);font-size:14.5px}
+  .step-card p code{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:12px;direction:ltr;display:inline-block}
+
+  /* Features */
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .feat{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 22px;transition:transform .25s,border-color .25s;
+  }
+  .feat:hover{transform:translateY(-4px);border-color:rgba(6,182,212,.45)}
+  .feat .f-ico{font-size:26px;margin-bottom:12px;display:block}
+  .feat h3{font-size:16px;font-weight:800;margin-bottom:6px}
+  .feat p{color:var(--mut);font-size:14px}
+
+  /* Install / code card */
+  .install-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:32px 28px;text-align:center;
+  }
+  .install-card .bm{margin:18px 0 4px}
+  textarea{
+    width:100%;height:110px;background:#04060c;color:#8fd0ff;
+    border:1px solid var(--line);border-radius:12px;padding:13px;
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;
+    direction:ltr;white-space:pre;overflow:auto;resize:vertical;margin-top:14px;
+  }
+  button.copy{
+    background:var(--grad);border:0;color:#fff;padding:11px 26px;border-radius:11px;
+    font-weight:800;font-size:14.5px;cursor:pointer;margin-top:12px;font-family:inherit;
+    transition:transform .2s,filter .2s;
+  }
+  button.copy:hover{transform:translateY(-1px);filter:brightness(1.1)}
+  details.src{margin-top:16px;text-align:start}
+  details.src summary{cursor:pointer;color:var(--mut);font-size:13.5px;font-weight:600}
+  pre{
+    background:#04060c;border:1px solid var(--line);border-radius:12px;padding:14px;
+    overflow:auto;direction:ltr;font-size:10.5px;max-height:340px;margin-top:10px;text-align:left;
+  }
+
+  /* FAQ */
+  .faq details{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 20px;margin-bottom:11px;transition:border-color .25s;
+  }
+  .faq details[open]{border-color:rgba(139,92,246,.45)}
+  .faq summary{
+    cursor:pointer;font-weight:800;font-size:15.5px;list-style:none;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-size:22px;color:var(--mut);transition:transform .25s;flex-shrink:0}
+  .faq details[open] summary::after{transform:rotate(45deg)}
+  .faq details p{color:var(--mut);font-size:14.5px;margin-top:10px}
+  .faq details p b{color:#dbe3ef}
+
+  /* Legal + footer */
+  .legal{
+    border:1px solid rgba(251,191,36,.3);background:rgba(251,191,36,.06);
+    border-radius:14px;padding:16px 20px;font-size:13.5px;color:#fde68a;margin-top:34px;
+  }
+  footer{border-top:1px solid var(--line);padding:30px 0 40px;margin-top:40px}
+  .foot-in{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:13.5px}
+
+  /* Reveal animation */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+    .bm,.plat,.feat{transition:none}
+  }
+
+  /* Toast */
+  #toast{
+    position:fixed;bottom:26px;inset-inline-start:50%;transform:translateX(50%) translateY(80px);
+    background:#1c2333;border:1px solid var(--line);color:#fff;font-weight:700;font-size:14px;
+    padding:12px 22px;border-radius:12px;z-index:99;transition:transform .35s;box-shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  #toast.show{transform:translateX(50%) translateY(0)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>أداة تحميل وسائط إنستغرام <span class="pill">صور</span><span class="tag">فيديو</span></h1>
-  <p class="sub">تعرض كل صور وفيديوهات المنشور، تختار ما تريد، وتحمّله بالجودة الأصلية (الفيديو بالصوت) — فرديّاً أو كملف ZIP.</p>
 
-  <div class="card">
-    <h2>① التثبيت</h2>
-    <p>اسحب الزر التالي وأفلته على <b>شريط المفضلة</b> (Bookmarks Bar) في متصفّحك:</p>
-    <p style="margin:18px 0"><a id="bm" class="bm" href="#">📥 تحميل وسائط إنستغرام</a></p>
-    <p class="hint">لإظهار شريط المفضلة في كروم: اضغط <code>Ctrl/⌘ + Shift + B</code>. إن لم تستطع السحب، انسخ الكود من الأسفل وأنشئ إشارة مرجعية جديدة والصقه في خانة الرابط (URL).</p>
+<nav>
+  <div class="container nav-in">
+    <a class="logo" href="#">
+      <span class="logo-badge">⬇</span>
+      <span>سوشيال <b>سيفر</b></span>
+    </a>
+    <div class="nav-links">
+      <a href="#platforms">المنصات</a>
+      <a href="#install">التثبيت</a>
+      <a href="#how">الاستخدام</a>
+      <a href="#faq">الأسئلة الشائعة</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero container">
+  <div>
+    <span class="eyebrow">✦ أداة واحدة لكل منصات التواصل</span>
+    <h1>حمّل أي صورة أو فيديو <span class="grad">بالجودة الأصلية</span> من كل المنصات</h1>
+    <p class="lead">إنستغرام، تيك توك، إكس (تويتر)، فيسبوك، ثريدز، بنترست — وأي موقع آخر. كل شيء يعمل داخل متصفحك مباشرة: بدون سيرفرات، بدون إعلانات، وبدون أن تغادر بياناتك جهازك.</p>
+    <a id="bm" class="bm" href="#" title="اسحبني إلى شريط المفضلة">📥 سوشيال سيفر</a>
+    <p class="drag-hint">اسحب الزر أعلاه وأفلته في <b>شريط المفضلة</b> — لا تضغط عليه هنا. لإظهار الشريط: <code style="direction:ltr;display:inline-block">Ctrl/⌘ + Shift + B</code></p>
+    <div class="stats">
+      <span class="stat"><span>✓</span> جودة أصلية 100%</span>
+      <span class="stat"><span>✓</span> 6+ منصات</span>
+      <span class="stat"><span>✓</span> تحميل ZIP دفعة واحدة</span>
+      <span class="stat"><span>✓</span> مجاني ومفتوح المصدر</span>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>② الاستخدام</h2>
-    <ol class="step">
-      <li>افتح أي منشور أو ريل على صفحته، مثل <code>instagram.com/p/XXXX/</code> أو <code>/reel/XXXX/</code></li>
-      <li>اضغط زر <b>«تحميل وسائط إنستغرام»</b> من شريط المفضلة.</li>
-      <li>تظهر فوراً لوحة بكل الصور والفيديوهات (الفيديو مميّز بشارة <b>▶ فيديو</b>).</li>
-      <li>اضغط <b>تحميل</b> تحت أي عنصر، أو حدّد عدّة عناصر ثم <b>تحميل المحدّد</b> / <b>تحميل ZIP</b>.</li>
-    </ol>
+  <div class="mock" aria-hidden="true">
+    <div class="mock-bar">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      <span class="mock-title">سوشيال سيفر — 4 صور · 2 فيديو</span>
+    </div>
+    <div class="mock-grid">
+      <div class="thumb" style="background:linear-gradient(135deg,#f43f5e,#fb923c)"><span class="chk">✓</span><small>4096 × 3072</small></div>
+      <div class="thumb" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">▶<span class="chk">✓</span><small>1080p</small></div>
+      <div class="thumb" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)"><small>2048 × 2048</small></div>
+      <div class="thumb" style="background:linear-gradient(135deg,#10b981,#84cc16)"><small>3024 × 4032</small></div>
+      <div class="thumb" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">▶<small>4K</small></div>
+      <div class="thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"><span class="chk">✓</span><small>1440 × 1800</small></div>
+    </div>
+    <div class="mock-actions">
+      <span class="mock-btn" style="background:linear-gradient(120deg,#8b5cf6,#6366f1)">⬇ تحميل المحدّد</span>
+      <span class="mock-btn" style="background:#166534">🗜 تحميل ZIP</span>
+    </div>
   </div>
+</header>
 
-  <div class="card">
-    <h2>③ نسخ الكود يدوياً</h2>
-    <p>للصق في إشارة مرجعية جديدة، أو في وحدة التحكّم (Console):</p>
-    <textarea id="bmtext" readonly spellcheck="false"></textarea>
-    <br><button class="copy" id="copyBtn">نسخ الكود</button>
-    <p class="hint">طريقة الـ Console: افتح المنشور، اضغط <code>F12</code> ← تبويب <b>Console</b>، الصق الكود واضغط Enter.</p>
+<section id="platforms" class="container">
+  <div class="sec-head reveal">
+    <span class="sec-eyebrow">المنصات المدعومة</span>
+    <h2 class="sec-title">منصة واحدة؟ لا… كلها</h2>
+    <p class="sec-sub">محرّك استخراج مخصّص لكل منصة يقرأ روابط الوسائط الأصلية من بيانات الصفحة نفسها — وليس لقطات شاشة أو نسخاً مضغوطة.</p>
   </div>
+  <div class="plat-grid reveal">
+    <div class="plat"><img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram" loading="lazy" width="34" height="34"><h3>إنستغرام</h3><span class="badge">صور + فيديو + ريلز</span></div>
+    <div class="plat"><img src="https://cdn.simpleicons.org/tiktok/ffffff" alt="TikTok" loading="lazy" width="34" height="34"><h3>تيك توك</h3><span class="badge">فيديو + صور</span></div>
+    <div class="plat"><img src="https://cdn.simpleicons.org/x/ffffff" alt="X" loading="lazy" width="34" height="34"><h3>إكس (تويتر)</h3><span class="badge">صور + فيديو</span></div>
+    <div class="plat"><img src="https://cdn.simpleicons.org/facebook/0866FF" alt="Facebook" loading="lazy" width="34" height="34"><h3>فيسبوك</h3><span class="badge">فيديو HD + صور</span></div>
+    <div class="plat"><img src="https://cdn.simpleicons.org/threads/ffffff" alt="Threads" loading="lazy" width="34" height="34"><h3>ثريدز</h3><span class="badge">صور + فيديو</span></div>
+    <div class="plat"><img src="https://cdn.simpleicons.org/pinterest/BD081C" alt="Pinterest" loading="lazy" width="34" height="34"><h3>بنترست</h3><span class="badge">صور أصلية + فيديو</span></div>
+    <div class="plat"><span class="p-emoji">🌐</span><h3>أي موقع آخر</h3><span class="badge alt">وضع عام ذكي</span></div>
+  </div>
+</section>
 
-  <div class="card">
-    <h2>ملاحظات مهمّة</h2>
-    <ul class="notes">
-      <li><b>الجودة:</b> الأداة تقرأ روابط الوسائط الأصلية من بيانات الصفحة — الصور بأعلى دقة، والفيديو بنسخته المدمجة (فيديو + صوت)، وليست لقطات شاشة.</li>
-      <li><b>يعمل وأنت مسجّل الدخول أو بدونه؛</b> وتُرتّب العناصر بنفس ترتيب المنشور.</li>
-      <li><b>تحميل متعدّد:</b> عند تحميل أكثر من عنصر قد يسألك كروم «السماح بتنزيل ملفات متعددة؟» — اختر «سماح».</li>
-      <li><b>أسماء الملفات:</b> <code>ig_&lt;المعرّف&gt;_01.jpg</code> للصور و<code>.mp4</code> للفيديو.</li>
-      <li class="warn">استخدمها للوسائط التي يحقّ لك تحميلها، واحترم حقوق النشر وشروط استخدام إنستغرام.</li>
-      <li>إن لم يعمل الزر بسبب سياسة أمان الصفحة (نادر)، استخدم طريقة الـ Console.</li>
-    </ul>
-    <details>
-      <summary>عرض الكود المصدري كاملاً</summary>
+<section id="install" class="container">
+  <div class="sec-head reveal">
+    <span class="sec-eyebrow">التثبيت — ٥ ثوانٍ فقط</span>
+    <h2 class="sec-title">اسحب، أفلت، انتهيت</h2>
+  </div>
+  <div class="install-card reveal">
+    <p>اسحب هذا الزر وأفلته على <b>شريط المفضلة</b> (Bookmarks Bar) في متصفحك:</p>
+    <p><a id="bm2" class="bm" href="#" title="اسحبني إلى شريط المفضلة">📥 سوشيال سيفر</a></p>
+    <p class="drag-hint">إن لم تستطع السحب، انسخ الكود التالي وأنشئ إشارة مرجعية جديدة والصقه في خانة الرابط (URL):</p>
+    <textarea id="bmtext" readonly spellcheck="false" aria-label="كود الأداة"></textarea>
+    <button class="copy" id="copyBtn">📋 نسخ الكود</button>
+    <p class="drag-hint">طريقة بديلة: افتح المنشور ← اضغط <code style="direction:ltr;display:inline-block">F12</code> ← تبويب Console ← الصق الكود واضغط Enter.</p>
+    <details class="src">
+      <summary>عرض الكود المصدري كاملاً (شفافية 100%)</summary>
       <pre id="src"></pre>
     </details>
   </div>
-</div>
+</section>
+
+<section id="how" class="container">
+  <div class="sec-head reveal">
+    <span class="sec-eyebrow">طريقة الاستخدام</span>
+    <h2 class="sec-title">ثلاث خطوات لا أكثر</h2>
+  </div>
+  <div class="steps-grid reveal">
+    <div class="step-card">
+      <span class="step-num">1</span>
+      <span class="step-ico">🔗</span>
+      <h3>افتح المنشور</h3>
+      <p>افتح صفحة المنشور نفسه في أي منصة، مثل <code>instagram.com/p/…</code> أو <code>tiktok.com/@user/video/…</code> أو <code>x.com/user/status/…</code></p>
+    </div>
+    <div class="step-card">
+      <span class="step-num">2</span>
+      <span class="step-ico">📥</span>
+      <h3>اضغط الأداة</h3>
+      <p>اضغط زر «سوشيال سيفر» من شريط المفضلة. ستتعرّف الأداة على المنصة تلقائياً وتعرض كل الوسائط بجودتها الأصلية. <b>نصيحة:</b> إن كان المنشور فيديو، شغّله لثوانٍ أولاً.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-num">3</span>
+      <span class="step-ico">⬇️</span>
+      <h3>اختر وحمّل</h3>
+      <p>حمّل أي عنصر بشكل فردي، أو حدّد عدة عناصر وحمّلها دفعة واحدة، أو اجمعها كلها في ملف ZIP واحد.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="sec-head reveal">
+    <span class="sec-eyebrow">لماذا سوشيال سيفر؟</span>
+    <h2 class="sec-title">مصمَّمة لتكون الأفضل</h2>
+  </div>
+  <div class="feat-grid reveal">
+    <div class="feat"><span class="f-ico">💎</span><h3>الجودة الأصلية 100%</h3><p>تقرأ الأداة روابط الملفات الأصلية من بيانات المنصة نفسها — الصور بأعلى دقة متاحة، والفيديو بأعلى جودة مع الصوت.</p></div>
+    <div class="feat"><span class="f-ico">🔒</span><h3>خصوصية مطلقة</h3><p>لا سيرفرات ولا وسيط: التحميل يتم مباشرة بين متصفحك والمنصة. لا نرى روابطك ولا ملفاتك — ولا نريد ذلك.</p></div>
+    <div class="feat"><span class="f-ico">🗜️</span><h3>تحميل دفعة واحدة</h3><p>منشور فيه ١٠ صور؟ حدّدها كلها وحمّلها بضغطة واحدة، أو اجمعها في ملف ZIP منظّم بأسماء مرتّبة.</p></div>
+    <div class="feat"><span class="f-ico">⚡</span><h3>بدون إعلانات، مجاناً</h3><p>لا نوافذ منبثقة ولا انتظار ولا حدود تحميل. أداة مفتوحة المصدر يمكنك قراءة كل سطر فيها.</p></div>
+  </div>
+</section>
+
+<section id="faq" class="container faq">
+  <div class="sec-head reveal">
+    <span class="sec-eyebrow">الأسئلة الشائعة</span>
+    <h2 class="sec-title">كل ما تحتاج معرفته</h2>
+  </div>
+  <div class="reveal">
+    <details>
+      <summary>هل الأداة مجانية فعلاً؟</summary>
+      <p>نعم، مجانية بالكامل ومفتوحة المصدر وبدون أي إعلانات أو حدود استخدام. يمكنك حتى قراءة الكود المصدري كاملاً من قسم التثبيت.</p>
+    </details>
+    <details>
+      <summary>أين تذهب بياناتي وروابطي؟</summary>
+      <p><b>لا مكان.</b> الأداة تعمل بالكامل داخل متصفحك وعلى صفحة المنصة نفسها. لا يوجد سيرفر وسيط، ولا يتم رفع أو تسجيل أي رابط أو ملف. هذا فرق جوهري عن مواقع التحميل التقليدية.</p>
+    </details>
+    <details>
+      <summary>لا يظهر الفيديو في إكس أو موقع آخر — ما الحل؟</summary>
+      <p>شغّل الفيديو لثوانٍ قليلة ثم اضغط الأداة مرة أخرى. بعض المنصات لا تكشف رابط الفيديو إلا بعد بدء تشغيله، والأداة تلتقطه فور توفره.</p>
+    </details>
+    <details>
+      <summary>لماذا يوتيوب غير مدعوم؟</summary>
+      <p>يوتيوب يشفّر روابط الفيديو ويفصل الصوت عن الصورة في بثّين منفصلين، لذا لا يمكن لأي أداة متصفح تحميله بجودة عالية مع الصوت بشكل موثوق. نفضّل الصراحة على وعود زائفة — لتحميل يوتيوب استخدم أدوات سطح مكتب متخصصة.</p>
+    </details>
+    <details>
+      <summary>هل تعمل على الجوال؟</summary>
+      <p>الأداة مصممة أساساً لمتصفحات سطح المكتب (كروم، إيدج، فايرفوكس، سفاري). على الجوال يمكن استخدامها في كروم وسفاري عبر حفظها كإشارة مرجعية ثم كتابة اسمها في شريط العنوان أثناء تصفح المنشور.</p>
+    </details>
+    <details>
+      <summary>هل استخدام الأداة قانوني؟</summary>
+      <p>الأداة نفسها مجرد وسيلة تقنية. حمّل فقط الوسائط التي يحق لك تحميلها: محتواك الخاص، أو محتوى مصرّح به، أو ضمن الاستخدام العادل. احترم دائماً حقوق النشر وشروط استخدام كل منصة.</p>
+    </details>
+  </div>
+  <div class="legal reveal">⚖️ تنبيه: استخدم الأداة للوسائط التي يحق لك تحميلها فقط، واحترم حقوق النشر وشروط استخدام المنصات. أنت المسؤول الوحيد عن طريقة استخدامك لها.</div>
+</section>
+
+<footer>
+  <div class="container foot-in">
+    <span>سوشيال سيفر © 2026 — أداة مجانية مفتوحة المصدر</span>
+    <span>صُنعت بشغف 💜 بمساعدة Claude</span>
+  </div>
+</footer>
+
+<div id="toast" role="status"></div>
 
 <script>
-async function __igdl(){
-  /* Instagram HQ Media Downloader — reads original image + video URLs from the page's embedded JSON, then shows a picker to download at full quality (video includes audio). */
-  const ID='__igHQDL'; const ex=document.getElementById(ID); if(ex){ex.remove();}
+/* ============================================================
+   المحرّك: دالة الاستخراج والتحميل (تتحول إلى Bookmarklet)
+   ملاحظة: لا تستخدم تعليقات // داخل الدالة — فقط تعليقات بلوك
+   ============================================================ */
+async function __smdl(){
+  const ID='__smHQDL';const old=document.getElementById(ID);if(old)old.remove();
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-  const sc=(location.pathname.match(/\/(?:p|reel|tv)\/([^/]+)/)||[,'instagram'])[1];
-  const deep=(o,pred,out,d)=>{ if(!o||typeof o!=='object'||d>25)return; try{if(pred(o))out.push(o);}catch(e){} for(const k in o){const v=o[k]; if(v&&typeof v==='object')deep(v,pred,out,d+1);} };
-  const parsed=[]; for(const s of document.querySelectorAll('script[type="application/json"]')){ try{parsed.push(JSON.parse(s.textContent));}catch(e){} }
-  let roots=[]; for(const j of parsed) deep(j,o=>o&&o.code===sc&&(o.carousel_media||o.image_versions2||o.video_versions),roots,0);
-  let root=null; for(const r of roots){ const rl=r.carousel_media?r.carousel_media.length:0; const cur=root&&root.carousel_media?root.carousel_media.length:0; if(!root||rl>cur) root=r; }
-  if(!root){ let cars=[]; for(const j of parsed) deep(j,o=>Array.isArray(o.carousel_media)&&o.carousel_media.length,cars,0); for(const c of cars){ const cur=root&&root.carousel_media?root.carousel_media.length:0; if(!root||c.carousel_media.length>cur) root=c; } }
-  if(!root){ let md=[]; for(const j of parsed) deep(j,o=>o.image_versions2&&o.image_versions2.candidates,md,0); let bw=-1; for(const m of md){ const w=Math.max(0,...m.image_versions2.candidates.map(c=>+c.width||0)); if(w>bw){bw=w;root=m;} } }
+  const host=location.hostname.replace(/^www\./,'').replace(/^m\./,'');
+  if(/(^|\.)youtube\.com$/.test(host)||host==='youtu.be'){alert('يوتيوب غير مدعوم: يشفّر روابط الفيديو ويفصل الصوت عن الصورة، فلا يمكن تحميله من المتصفح بجودة عالية. استخدم أداة سطح مكتب متخصصة.');return;}
+  const items=[];const seen=new Set();
+  const push=(type,url,w,h,poster)=>{if(!url||typeof url!=='string')return;if(url.slice(0,5)==='blob:'||url.slice(0,5)==='data:')return;if(seen.has(url))return;seen.add(url);items.push({type:type,url:url,w:+w||0,h:+h||0,poster:poster||''});};
+  const deep=(o,pred,out,d)=>{if(!o||typeof o!=='object'||d>28)return;try{if(pred(o))out.push(o);}catch(e){}for(const k in o){const v=o[k];if(v&&typeof v==='object')deep(v,pred,out,d+1);}};
+  const parseScripts=sel=>{const a=[];for(const s of document.querySelectorAll(sel)){try{a.push(JSON.parse(s.textContent));}catch(e){}}return a;};
   const bestBy=arr=>{let b=null;for(const c of arr||[]){if(!b||(+c.width||0)>(+b.width||0))b=c;}return b;};
-  const items=[];
-  if(root){ const children=root.carousel_media&&root.carousel_media.length?root.carousel_media:[root];
-    for(const n of children){
-      if(n.video_versions&&n.video_versions.length){ const bv=bestBy(n.video_versions)||n.video_versions[0]; const cov=bestBy(n.image_versions2&&n.image_versions2.candidates); items.push({type:'video',url:bv.url,w:+bv.width||+n.original_width||0,h:+bv.height||+n.original_height||0,poster:cov?cov.url:''}); }
-      else if(n.image_versions2&&n.image_versions2.candidates){ const bi=bestBy(n.image_versions2.candidates); if(bi) items.push({type:'image',url:bi.url,w:+bi.width||0,h:+bi.height||0,poster:''}); }
+  let brand='الوسائط',prefix='media';
+
+  /* ---------- إنستغرام + ثريدز ---------- */
+  if(/(^|\.)instagram\.com$/.test(host)||/threads\.(net|com)$/.test(host)){
+    const isTh=/threads/.test(host);brand=isTh?'ثريدز':'إنستغرام';prefix=isTh?'threads':'ig';
+    const sc=(location.pathname.match(/\/(?:p|reel|tv|post)\/([^/]+)/)||[,''])[1];
+    const parsed=parseScripts('script[type="application/json"]');
+    let roots=[];
+    if(sc)for(const j of parsed)deep(j,o=>o&&o.code===sc&&(o.carousel_media||o.image_versions2||o.video_versions),roots,0);
+    let root=null;
+    for(const r of roots){const rl=r.carousel_media?r.carousel_media.length:0;const cur=root&&root.carousel_media?root.carousel_media.length:0;if(!root||rl>cur)root=r;}
+    if(!root){let cars=[];for(const j of parsed)deep(j,o=>Array.isArray(o.carousel_media)&&o.carousel_media.length,cars,0);for(const c of cars){const cur=root&&root.carousel_media?root.carousel_media.length:0;if(!root||c.carousel_media.length>cur)root=c;}}
+    if(!root){let md=[];for(const j of parsed)deep(j,o=>o.image_versions2&&o.image_versions2.candidates,md,0);let bw=-1;for(const m of md){const w=Math.max(0,...m.image_versions2.candidates.map(c=>+c.width||0));if(w>bw){bw=w;root=m;}}}
+    if(root){
+      const kids=root.carousel_media&&root.carousel_media.length?root.carousel_media:[root];
+      for(const n of kids){
+        if(n.video_versions&&n.video_versions.length){const bv=bestBy(n.video_versions)||n.video_versions[0];const cov=bestBy(n.image_versions2&&n.image_versions2.candidates);push('video',bv.url,bv.width||n.original_width,bv.height||n.original_height,cov?cov.url:'');}
+        else if(n.image_versions2&&n.image_versions2.candidates){const bi=bestBy(n.image_versions2.candidates);if(bi)push('image',bi.url,bi.width,bi.height,'');}
+      }
+    }
+    if(sc)prefix+='_'+sc;
+  }
+  /* ---------- تيك توك ---------- */
+  else if(/(^|\.)tiktok\.com$/.test(host)){
+    brand='تيك توك';prefix='tiktok';
+    const el=document.getElementById('__UNIVERSAL_DATA_FOR_REHYDRATION__')||document.getElementById('SIGI_STATE');
+    let data=null;if(el){try{data=JSON.parse(el.textContent);}catch(e){}}
+    let structs=[];deep(data,o=>o&&((o.video&&(o.video.playAddr||o.video.downloadAddr||o.video.bitrateInfo))||(o.imagePost&&o.imagePost.images)),structs,0);
+    const vid=(location.pathname.match(/\/(?:video|photo)\/(\d+)/)||[,''])[1];
+    const it=structs.find(s=>s.id===vid)||structs[0];
+    if(it){
+      if(it.imagePost&&it.imagePost.images){for(const im of it.imagePost.images){const u=im.imageURL&&im.imageURL.urlList&&im.imageURL.urlList[0];push('image',u,im.imageWidth,im.imageHeight,'');}}
+      if(it.video){
+        const v=it.video;let best=null,bw=-1;
+        for(const b of v.bitrateInfo||[]){const ul=b.PlayAddr&&b.PlayAddr.UrlList;const u=ul&&ul[ul.length-1];const br=+b.Bitrate||0;if(u&&br>bw){bw=br;best={u:u,w:b.PlayAddr.Width,h:b.PlayAddr.Height};}}
+        if(best)push('video',best.u,best.w,best.h,v.cover);
+        push('video',v.downloadAddr,v.width,v.height,v.cover);
+        push('video',v.playAddr,v.width,v.height,v.cover);
+      }
+      if(it.id)prefix+='_'+it.id;
     }
   }
-  if(!items.length){ alert('لم أعثر على وسائط قابلة للتحميل. افتح صفحة منشور أو ريل (‏instagram.com/p/…‏ أو ‏/reel/…‏) ثم شغّل الأداة.'); return; }
+  /* ---------- إكس (تويتر) ---------- */
+  else if(host==='x.com'||/(^|\.)twitter\.com$/.test(host)){
+    brand='إكس (تويتر)';prefix='x';
+    const tid=(location.pathname.match(/\/status\/(\d+)/)||[,''])[1];if(tid)prefix+='_'+tid;
+    const found=new Map();
+    const addMp4=u=>{const m=u.match(/(?:ext_tw_video|amplify_video|tweet_video)\/(\d+)/);const key=m?m[1]:u;const dim=u.match(/\/(\d+)x(\d+)\//);const w=dim?+dim[1]:0,h=dim?+dim[2]:0;const cur=found.get(key);if(!cur||w*h>cur.w*cur.h)found.set(key,{u:u,w:w,h:h});};
+    const rx=/https:\/\/video\.twimg\.com\/[^"'\\\s]+?\.mp4[^"'\\\s]*/g;
+    for(const s of document.querySelectorAll('script')){const t=s.textContent||'';let m;while((m=rx.exec(t)))addMp4(m[0]);}
+    try{for(const e of performance.getEntriesByType('resource')){if(/video\.twimg\.com/.test(e.name)&&/\.mp4/.test(e.name))addMp4(e.name.split('?')[0]);}}catch(e){}
+    for(const v of found.values())push('video',v.u,v.w,v.h,'');
+    for(const im of document.querySelectorAll('img[src*="pbs.twimg.com/media/"]')){
+      try{const u=new URL(im.src);u.searchParams.set('name','orig');if(!u.searchParams.get('format'))u.searchParams.set('format','jpg');push('image',u.toString(),im.naturalWidth,im.naturalHeight,'');}catch(e){}
+    }
+  }
+  /* ---------- فيسبوك ---------- */
+  else if(/(^|\.)facebook\.com$/.test(host)||host==='fb.watch'){
+    brand='فيسبوك';prefix='fb';
+    const un=s=>{try{return JSON.parse('"'+s+'"');}catch(e){return s.split('\\/').join('/');}};
+    const pats=[/"browser_native_hd_url":"([^"]+)"/g,/"playable_url_quality_hd":"([^"]+)"/g,/"browser_native_sd_url":"([^"]+)"/g,/"playable_url":"([^"]+)"/g];
+    for(const p of pats){
+      for(const s of document.querySelectorAll('script')){const t=s.textContent||'';let m;while((m=p.exec(t))){const u=un(m[1]);if(/^https?:/.test(u))push('video',u,0,0,'');}}
+      if(items.some(i=>i.type==='video'))break;
+    }
+    for(const im of document.querySelectorAll('img[data-visualcompletion="media-vc-image"]'))push('image',im.src,im.naturalWidth,im.naturalHeight,'');
+  }
+  /* ---------- بنترست ---------- */
+  else if(/(^|\.)pinterest\.[a-z.]+$/.test(host)){
+    brand='بنترست';prefix='pin';
+    const parsed=parseScripts('script#__PWS_DATA__,script[type="application/json"]');
+    let pins=[];for(const j of parsed)deep(j,o=>o&&((o.videos&&o.videos.video_list)||(o.images&&(o.images.orig||o.images.originals))),pins,0);
+    for(const p of pins){
+      if(p.videos&&p.videos.video_list){let best=null;for(const k in p.videos.video_list){const v=p.videos.video_list[k];if(v&&v.url&&/\.mp4/.test(v.url)&&(!best||(+v.width||0)>(+best.width||0)))best=v;}if(best)push('video',best.url,best.width,best.height,best.thumbnail||'');}
+      const or=p.images&&(p.images.orig||p.images.originals);
+      if(or&&or.url)push('image',or.url,or.width,or.height,'');
+    }
+  }
+
+  /* ---------- الوضع العام الذكي: أي موقع آخر أو كخطة بديلة ---------- */
+  if(!items.length){
+    if(brand==='الوسائط'){brand=host;prefix='web';}
+    const og=p=>{const m=document.querySelector('meta[property="'+p+'"],meta[name="'+p+'"]');return m?(m.getAttribute('content')||''):'';};
+    push('video',og('og:video:secure_url')||og('og:video:url')||og('og:video'),+og('og:video:width'),+og('og:video:height'),og('og:image'));
+    for(const j of parseScripts('script[type="application/ld+json"]')){let vs=[];deep(j,o=>o&&o.contentUrl&&/VideoObject/.test(String(o['@type']||'')),vs,0);for(const v of vs)push('video',v.contentUrl,+v.width,+v.height,typeof v.thumbnailUrl==='string'?v.thumbnailUrl:'');}
+    document.querySelectorAll('video').forEach(v=>{const s=v.currentSrc||v.src;if(s)push('video',s,v.videoWidth,v.videoHeight,v.poster);v.querySelectorAll('source').forEach(so=>{if(so.src)push('video',so.src,0,0,v.poster);});});
+    try{for(const e of performance.getEntriesByType('resource')){if(/\.mp4(\?|$)/.test(e.name))push('video',e.name,0,0,'');}}catch(e){}
+    const imgs=[...document.querySelectorAll('img')].filter(i=>i.naturalWidth>=500&&i.naturalHeight>=400);
+    for(const im of imgs){
+      let u=im.currentSrc||im.src,bw=im.naturalWidth;
+      if(im.srcset){for(const part of im.srcset.split(',')){const seg=part.trim().split(/\s+/);const w=parseInt(seg[1]||'0',10);if(seg[0]&&w>bw){bw=w;u=seg[0];}}}
+      push('image',u,im.naturalWidth,im.naturalHeight,'');
+    }
+    if(!items.some(i=>i.type==='image')){const gi=og('og:image');if(gi)push('image',gi,0,0,'');}
+  }
+
+  if(!items.length){alert('لم أعثر على وسائط قابلة للتحميل في هذه الصفحة.\nافتح صفحة المنشور نفسه (وليس الصفحة الرئيسية أو الخلاصة)، وإن كان فيديو فشغّله لثوانٍ ثم أعد المحاولة.');return;}
+
+  /* ---------- أدوات التحميل ---------- */
   const dl=(blob,name)=>{const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),10000);};
-  const extImg=t=>t.includes('png')?'png':t.includes('webp')?'webp':'jpg';
+  const extImg=t=>t.includes('png')?'png':t.includes('webp')?'webp':t.includes('gif')?'gif':'jpg';
+  const grab=async url=>{
+    try{const r=await fetch(url);if(r.ok)return await r.blob();}catch(e){}
+    try{const r=await fetch(url,{credentials:'include'});if(r.ok)return await r.blob();}catch(e){}
+    return null;
+  };
+  const nameFor=(i,ext)=>prefix+'_'+String(i+1).padStart(2,'0')+'.'+ext;
+  const one=async i=>{
+    const it=items[i];const b=await grab(it.url);
+    if(!b){window.open(it.url,'_blank');return false;}
+    dl(b,nameFor(i,it.type==='video'?'mp4':extImg(b.type)));return true;
+  };
   const crcT=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
   const crc32=u8=>{let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=(c>>>8)^crcT[(c^u8[i])&255];return(c^0xFFFFFFFF)>>>0;};
   const u16=n=>[n&255,(n>>>8)&255],u32=n=>[n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255];
-  const makeZip=async list=>{const enc=new TextEncoder();const loc=[],cen=[];let off=0;for(const it of list){const data=new Uint8Array(await(await fetch(it.url)).arrayBuffer());const nb=enc.encode(it.name);const crc=crc32(data),sz=data.length;const lh=new Uint8Array([].concat(u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nb.length),u16(0)));loc.push(lh,nb,data);cen.push(new Uint8Array([].concat(u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nb.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off))),nb);off+=lh.length+nb.length+data.length;}let cs=0;cen.forEach(c=>cs+=c.length);const eo=new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(list.length),u16(list.length),u32(cs),u32(off),u16(0)));return new Blob([...loc,...cen,eo],{type:'application/zip'});};
-  const nameFor=i=>'ig_'+sc+'_'+String(i+1).padStart(2,'0')+'.'+(items[i].type==='video'?'mp4':'jpg');
-  const one=async i=>{const it=items[i];const b=await(await fetch(it.url)).blob();const ext=it.type==='video'?'mp4':extImg(b.type);dl(b,'ig_'+sc+'_'+String(i+1).padStart(2,'0')+'.'+ext);};
-  const w=document.createElement('div');w.id=ID;w.dir='rtl';w.style.cssText='position:fixed;inset:0;z-index:2147483647;background:rgba(0,0,0,.9);font:14px system-ui;color:#fff;display:flex;flex-direction:column';
-  const nV=items.filter(i=>i.type==='video').length, nI=items.length-nV;
-  w.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #333;flex-wrap:wrap"><b style="font-size:16px">تحميل وسائط إنستغرام — جودة عالية</b><span style="opacity:.7">'+nI+' صورة · '+nV+' فيديو</span><label style="margin-inline-start:auto;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" id="'+ID+'_all"> تحديد الكل</label><button id="'+ID+'_sel" style="background:#0095f6;border:0;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600">تحميل المحدّد</button><button id="'+ID+'_zip" style="background:#1e874b;border:0;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600">تحميل ZIP</button><button id="'+ID+'_x" style="background:#333;border:0;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer">✕</button></div><div id="'+ID+'_g" style="overflow:auto;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px"></div>';
+  const makeZip=list=>{
+    const enc=new TextEncoder();const loc=[],cen=[];let off=0;
+    for(const it of list){
+      const data=it.data;const nb=enc.encode(it.name);const crc=crc32(data),sz=data.length;
+      const lh=new Uint8Array([].concat(u32(0x04034b50),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nb.length),u16(0)));
+      loc.push(lh,nb,data);
+      cen.push(new Uint8Array([].concat(u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(0),u16(0),u32(crc),u32(sz),u32(sz),u16(nb.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(off))),nb);
+      off+=lh.length+nb.length+data.length;
+    }
+    let cs=0;cen.forEach(c=>cs+=c.length);
+    const eo=new Uint8Array([].concat(u32(0x06054b50),u16(0),u16(0),u16(list.length),u16(list.length),u32(cs),u32(off),u16(0)));
+    return new Blob([...loc,...cen,eo],{type:'application/zip'});
+  };
+
+  /* ---------- واجهة الاختيار ---------- */
+  const w=document.createElement('div');w.id=ID;w.dir='rtl';
+  w.style.cssText='position:fixed;inset:0;z-index:2147483647;background:rgba(2,4,10,.92);font:14px Cairo,system-ui,sans-serif;color:#fff;display:flex;flex-direction:column;backdrop-filter:blur(6px)';
+  const nV=items.filter(i=>i.type==='video').length,nI=items.length-nV;
+  w.innerHTML='<div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.12);flex-wrap:wrap">'
+    +'<b style="font-size:16px">📥 سوشيال سيفر — '+brand+'</b>'
+    +'<span style="opacity:.65;font-size:13px">'+nI+' صورة · '+nV+' فيديو</span>'
+    +'<label style="margin-inline-start:auto;display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13px"><input type="checkbox" id="'+ID+'_all"> تحديد الكل</label>'
+    +'<button id="'+ID+'_sel" style="background:linear-gradient(120deg,#8b5cf6,#6366f1);border:0;color:#fff;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:700;font-family:inherit">⬇ تحميل المحدّد</button>'
+    +'<button id="'+ID+'_zip" style="background:#166534;border:0;color:#fff;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:700;font-family:inherit">🗜 تحميل ZIP</button>'
+    +'<button id="'+ID+'_x" style="background:rgba(255,255,255,.12);border:0;color:#fff;padding:9px 13px;border-radius:9px;cursor:pointer;font-family:inherit">✕</button>'
+    +'</div>'
+    +'<div id="'+ID+'_g" style="overflow:auto;padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px"></div>';
   document.body.appendChild(w);
   const grid=w.querySelector('#'+ID+'_g');
   items.forEach((it,i)=>{
     const c=document.createElement('div');
-    c.style.cssText='background:#161616;border:1px solid #2a2a2a;border-radius:12px;overflow:hidden;display:flex;flex-direction:column';
-    const thumb=it.type==='video'?(it.poster||''):it.url;
-    const badge=it.type==='video'?'<span style="position:absolute;top:8px;inset-inline-end:8px;background:#e1306c;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700">▶ فيديو</span>':'';
-    const play=it.type==='video'?'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:46px;text-shadow:0 2px 12px rgba(0,0,0,.7);pointer-events:none">▶</div>':'';
+    c.style.cssText='background:#121722;border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;display:flex;flex-direction:column';
+    const isV=it.type==='video';
+    let media;
+    if(isV&&!it.poster){media='<video src="'+it.url+'" preload="metadata" muted playsinline style="width:100%;height:210px;object-fit:cover;display:block;background:#000"></video>';}
+    else{media='<img src="'+(isV?it.poster:it.url)+'" loading="lazy" style="width:100%;height:210px;object-fit:cover;display:block;background:#000">';}
+    const badge=isV?'<span style="position:absolute;top:8px;inset-inline-end:8px;background:#e1306c;padding:3px 9px;border-radius:7px;font-size:12px;font-weight:700">▶ فيديو</span>':'';
+    const play=isV?'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;text-shadow:0 2px 14px rgba(0,0,0,.8);pointer-events:none">▶</div>':'';
     c.innerHTML='<div style="position:relative;background:#000">'
-      +'<img src="'+thumb+'" loading="lazy" style="width:100%;height:200px;object-fit:cover;display:block">'
-      +'<label style="position:absolute;top:8px;inset-inline-start:8px;background:rgba(0,0,0,.6);padding:4px 8px;border-radius:20px;display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" class="'+ID+'_cb" data-i="'+i+'"> #'+(i+1)+'</label>'
+      +media
+      +'<label style="position:absolute;top:8px;inset-inline-start:8px;background:rgba(0,0,0,.6);padding:4px 9px;border-radius:20px;display:flex;gap:6px;align-items:center;cursor:pointer;font-size:12px"><input type="checkbox" class="'+ID+'_cb" data-i="'+i+'"> #'+(i+1)+'</label>'
       +badge+play
-      +'<span class="'+ID+'_res" dir="ltr" style="position:absolute;bottom:8px;inset-inline-end:8px;background:rgba(0,0,0,.65);padding:3px 8px;border-radius:6px;font-size:12px">'+(it.w&&it.h?it.w+' × '+it.h:(it.type==='video'?'HD':''))+'</span>'
+      +'<span class="'+ID+'_res" dir="ltr" style="position:absolute;bottom:8px;inset-inline-end:8px;background:rgba(0,0,0,.65);padding:3px 9px;border-radius:7px;font-size:11.5px">'+(it.w&&it.h?it.w+' × '+it.h:(isV?'HD':''))+'</span>'
       +'</div>'
-      +'<button class="'+ID+'_one" data-i="'+i+'" style="background:'+(it.type==='video'?'#e1306c':'#0095f6')+';border:0;color:#fff;padding:10px;cursor:pointer;font-weight:600">⬇ تحميل '+(it.type==='video'?'الفيديو':'الصورة')+'</button>';
+      +'<div style="display:flex">'
+      +'<button class="'+ID+'_one" data-i="'+i+'" style="flex:1;background:'+(isV?'#e1306c':'#6d28d9')+';border:0;color:#fff;padding:11px;cursor:pointer;font-weight:700;font-family:inherit">⬇ تحميل '+(isV?'الفيديو':'الصورة')+'</button>'
+      +'<a href="'+it.url+'" target="_blank" rel="noopener" title="فتح في تبويب جديد" style="display:grid;place-items:center;width:44px;background:rgba(255,255,255,.08);color:#fff;text-decoration:none">↗</a>'
+      +'</div>';
     grid.appendChild(c);
-    const img=c.querySelector('img'), res=c.querySelector('.'+ID+'_res');
-    if(it.type==='image'){ img.addEventListener('load',()=>{ if(img.naturalWidth) res.textContent=img.naturalWidth+' × '+img.naturalHeight; }); }
+    const img=c.querySelector('img'),res=c.querySelector('.'+ID+'_res');
+    if(!isV&&img){img.addEventListener('load',()=>{if(img.naturalWidth)res.textContent=img.naturalWidth+' × '+img.naturalHeight;});}
+    const vd=c.querySelector('video');
+    if(vd){vd.addEventListener('loadedmetadata',()=>{if(vd.videoWidth)res.textContent=vd.videoWidth+' × '+vd.videoHeight;});}
   });
-  const close=()=>w.remove(); w.querySelector('#'+ID+'_x').onclick=close; w.addEventListener('click',e=>{if(e.target===w)close();});
+  const onKey=e=>{if(e.key==='Escape')close();};
+  const close=()=>{w.remove();window.removeEventListener('keydown',onKey);};
+  window.addEventListener('keydown',onKey);
+  w.querySelector('#'+ID+'_x').onclick=close;
+  w.addEventListener('click',e=>{if(e.target===w)close();});
   grid.querySelectorAll('.'+ID+'_one').forEach(b=>b.onclick=()=>one(+b.dataset.i));
   w.querySelector('#'+ID+'_all').onclick=e=>grid.querySelectorAll('.'+ID+'_cb').forEach(c=>c.checked=e.target.checked);
   const sel=()=>[...grid.querySelectorAll('.'+ID+'_cb')].filter(c=>c.checked).map(c=>+c.dataset.i);
   w.querySelector('#'+ID+'_sel').onclick=async()=>{let s=sel();if(!s.length)s=items.map((_,i)=>i);for(const i of s){await one(i);await sleep(600);}};
-  w.querySelector('#'+ID+'_zip').onclick=async e=>{let s=sel();if(!s.length)s=items.map((_,i)=>i);const t=e.target;const old=t.textContent;t.textContent='جارٍ التجهيز…';t.disabled=true;try{const list=s.map(i=>({url:items[i].url,name:nameFor(i)}));const zip=await makeZip(list);dl(zip,'ig_'+sc+'.zip');}catch(err){alert('تعذّر إنشاء ZIP: '+err);}t.textContent=old;t.disabled=false;};
+  w.querySelector('#'+ID+'_zip').onclick=async e=>{
+    let s=sel();if(!s.length)s=items.map((_,i)=>i);
+    const t=e.target;const oldTxt=t.textContent;t.textContent='جارٍ التجهيز…';t.disabled=true;
+    try{
+      const list=[];const failed=[];
+      for(const i of s){
+        const it=items[i];const b=await grab(it.url);
+        if(b)list.push({name:nameFor(i,it.type==='video'?'mp4':extImg(b.type)),data:new Uint8Array(await b.arrayBuffer())});
+        else failed.push(i+1);
+      }
+      if(list.length){dl(makeZip(list),prefix+'.zip');}
+      if(failed.length)alert('تعذّر ضم العناصر التالية إلى ملف ZIP (يمكنك تحميلها بزر «فتح ↗»): #'+failed.join(', #'));
+      if(!list.length&&!failed.length)alert('لم يتم تحديد أي عنصر.');
+    }catch(err){alert('تعذّر إنشاء ZIP: '+err);}
+    t.textContent=oldTxt;t.disabled=false;
+  };
 }
 
-/* Build the bookmarklet (single line) from the function source */
-var __src = __igdl.toString();
-var __oneLine = __src.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\n\s*/g,' ').trim();
-var __bm = 'javascript:(' + __oneLine + ')();';
-document.getElementById('bm').setAttribute('href', __bm);
-document.getElementById('bmtext').value = __bm;
-document.getElementById('src').textContent = __src;
-document.getElementById('copyBtn').addEventListener('click', function(){
-  var ta = document.getElementById('bmtext'); ta.select();
-  try{ navigator.clipboard.writeText(ta.value); }catch(e){ try{document.execCommand('copy');}catch(_){} }
-  var b=this; b.textContent='تم النسخ ✓'; setTimeout(function(){b.textContent='نسخ الكود';},1600);
-});
+/* ============================================================
+   بناء الـ Bookmarklet من مصدر الدالة + تفاعلات الصفحة
+   ============================================================ */
+(function(){
+  var src=__smdl.toString();
+  var oneLine=src.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\n\s*/g,' ').trim();
+  var bm='javascript:('+oneLine+')();';
+  ['bm','bm2'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.setAttribute('href',bm);
+    el.addEventListener('click',function(e){
+      e.preventDefault();
+      toast('اسحب الزر إلى شريط المفضلة بدل الضغط عليه هنا 😉');
+    });
+  });
+  document.getElementById('bmtext').value=bm;
+  document.getElementById('src').textContent=src;
+
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    var ta=document.getElementById('bmtext');ta.select();
+    try{navigator.clipboard.writeText(ta.value);}catch(e){try{document.execCommand('copy');}catch(_){}}
+    var b=this;b.textContent='✓ تم النسخ';setTimeout(function(){b.textContent='📋 نسخ الكود';},1600);
+  });
+
+  var toastTimer=null;
+  function toast(msg){
+    var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+    clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show');},2800);
+  }
+
+  /* Reveal on scroll */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+    },{threshold:.12});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+  }else{
+    document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});
+  }
+})();
 </script>
 </body>
 </html>
