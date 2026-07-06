@@ -451,8 +451,12 @@
       <p><b>لا مكان.</b> الأداة تعمل بالكامل داخل متصفحك وعلى صفحة المنصة نفسها. لا يوجد سيرفر وسيط، ولا يتم رفع أو تسجيل أي رابط أو ملف. هذا فرق جوهري عن مواقع التحميل التقليدية.</p>
     </details>
     <details>
-      <summary>لا يظهر الفيديو في إكس أو موقع آخر — ما الحل؟</summary>
-      <p>شغّل الفيديو لثوانٍ قليلة ثم اضغط الأداة مرة أخرى. بعض المنصات لا تكشف رابط الفيديو إلا بعد بدء تشغيله، والأداة تلتقطه فور توفره.</p>
+      <summary>كيف يعمل تحميل فيديو إكس (تويتر)؟</summary>
+      <p>إكس يبثّ الفيديو مجزّأً بلا رابط مباشر في الصفحة، وسياسته الأمنية تمنع الأدوات من الاتصال بالخوادم من داخله. لذلك عند الضغط على الأداة في تغريدة فيها فيديو، تنقلك تلقائياً إلى قسم «التحميل بالرابط» ويبدأ تحميل الفيديو عبر خوادم Cobalt الموثوقة. أما تغريدات الصور فتُعرض مباشرةً في لوحة الاختيار. يمكنك أيضاً نسخ رابط أي تغريدة ولصقه في قسم التحميل بالرابط.</p>
+    </details>
+    <details>
+      <summary>لا يظهر الفيديو في موقع آخر — ما الحل؟</summary>
+      <p>شغّل الفيديو لثوانٍ قليلة ثم اضغط الأداة مرة أخرى؛ بعض المواقع لا تكشف رابط الفيديو إلا بعد بدء تشغيله. أو انسخ رابط الصفحة والصقه في قسم «التحميل بالرابط».</p>
     </details>
     <details>
       <summary>كيف يعمل تحميل يوتيوب؟</summary>
@@ -540,15 +544,12 @@ async function __smdl(){
   else if(host==='x.com'||/(^|\.)twitter\.com$/.test(host)){
     brand='إكس (تويتر)';prefix='x';
     const tid=(location.pathname.match(/\/status\/(\d+)/)||[,''])[1];if(tid)prefix+='_'+tid;
-    const found=new Map();
-    const addMp4=u=>{const m=u.match(/(?:ext_tw_video|amplify_video|tweet_video)\/(\d+)/);const key=m?m[1]:u;const dim=u.match(/\/(\d+)x(\d+)\//);const w=dim?+dim[1]:0,h=dim?+dim[2]:0;const cur=found.get(key);if(!cur||w*h>cur.w*cur.h)found.set(key,{u:u,w:w,h:h});};
-    const rx=/https:\/\/video\.twimg\.com\/[^"'\\\s]+?\.mp4[^"'\\\s]*/g;
-    for(const s of document.querySelectorAll('script')){const t=s.textContent||'';let m;while((m=rx.exec(t)))addMp4(m[0]);}
-    try{for(const e of performance.getEntriesByType('resource')){if(/video\.twimg\.com/.test(e.name)&&/\.mp4/.test(e.name))addMp4(e.name.split('?')[0]);}}catch(e){}
-    for(const v of found.values())push('video',v.u,v.w,v.h,'');
+    const hasVideo=!!document.querySelector('[data-testid="videoPlayer"],[data-testid="videoComponent"],video');
     for(const im of document.querySelectorAll('img[src*="pbs.twimg.com/media/"]')){
       try{const u=new URL(im.src);u.searchParams.set('name','orig');if(!u.searchParams.get('format'))u.searchParams.set('format','jpg');push('image',u.toString(),im.naturalWidth,im.naturalHeight,'');}catch(e){}
     }
+    /* فيديو إكس يُبثّ مجزّأً (HLS) بلا رابط mp4 في الصفحة، وسياسة أمان إكس تمنع الاتصال بالخادم من داخلها — فنمرّر رابط التغريدة إلى قسم Cobalt الموثوق (يعمل مع الفيديو والصور والـ GIF) */
+    if(tid&&(hasVideo||!items.length)){window.open('https://ashrafcontact6086-web.github.io/Instagram-photo-downloader/?url='+encodeURIComponent(location.href)+'#byurl','_blank');return;}
   }
   /* ---------- فيسبوك ---------- */
   else if(/(^|\.)facebook\.com$/.test(host)||host==='fb.watch'){
@@ -779,7 +780,8 @@ async function __smdl(){
   function isFinalError(code){code=String(code||'');return code.indexOf('link.')>-1||code.indexOf('content')>-1;}
 
   async function cobaltAsk(api,url,q){
-    var body={url:url};
+    /* alwaysProxy: يمرّر الملف عبر الخادم فيصل بترويسات CORS + attachment صحيحة، ما يتيح تحميلاً مباشراً نظيفاً حتى لروابط CDN المقيّدة (مثل video.twimg.com) */
+    var body={url:url,alwaysProxy:true};
     if(q==='audio'){body.downloadMode='audio';body.audioFormat='mp3';}
     else{body.videoQuality=q;body.youtubeVideoCodec='h264';body.filenameStyle='pretty';}
     var ctl=new AbortController();var tm=setTimeout(function(){ctl.abort();},35000);
@@ -791,15 +793,27 @@ async function __smdl(){
     }finally{clearTimeout(tm);}
   }
 
-  function showResult(url,filename){
+  async function showResult(url,filename){
     $res.innerHTML='';
     var box=document.createElement('div');box.className='dl-res';
     var fn=document.createElement('span');fn.className='fn';fn.textContent=filename||'ملف الوسائط جاهز';
-    var a=document.createElement('a');a.className='get';a.href=url;a.textContent='⬇ احفظ الملف';
-    a.setAttribute('download',filename||'');a.rel='noopener';
+    var a=document.createElement('a');a.className='get';a.textContent='⬇ احفظ الملف';a.rel='noopener';
     box.appendChild(fn);box.appendChild(a);$res.appendChild(box);
-    status('✓ جاهز! اضغط «احفظ الملف». الرابط صالح لدقائق محدودة.','ok');
-    a.click();
+    status('<span class="spin"></span>جارٍ جلب الملف…');
+    var blob=null;
+    try{var r=await fetch(url);if(r.ok)blob=await r.blob();}catch(e){}
+    if(blob){
+      var obj=URL.createObjectURL(blob);
+      a.href=obj;a.setAttribute('download',filename||'video.mp4');
+      a.click();
+      status('✓ تم بدء الحفظ! إن لم يبدأ التنزيل اضغط «احفظ الملف».','ok');
+      setTimeout(function(){URL.revokeObjectURL(obj);},60000);
+    }else{
+      /* الرابط لا يسمح بالجلب المباشر (CORS) — نفتحه في تبويب ليحفظه المستخدم */
+      a.href=url;a.target='_blank';a.setAttribute('download',filename||'');
+      a.click();
+      status('✓ جاهز! فُتح الملف في تبويب جديد — احفظه من هناك (الرابط صالح لدقائق).','ok');
+    }
   }
 
   function showPicker(list){
